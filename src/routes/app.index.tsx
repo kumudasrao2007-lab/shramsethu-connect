@@ -60,7 +60,7 @@ function Dashboard() {
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <StatChip label="Profile completion" value={`${pct}%`} sub={pct < 100 ? "Keep going" : "Complete"} />
           <StatChip label="Verification" value={`${verified}/${totalDocs}`} sub="Documents verified" />
-            <StatChip label="GigScore" value={gig.data?.score ? String(gig.data.score) : "—"} sub={gig.data?.score ? "Verified" : "Awaiting activity"} />
+            <StatChip label="GigScore" value={gig.data?.score ? `${gig.data.score}/500` : "—"} sub={gig.data?.score ? "Verified" : "Awaiting activity"} />
         </div>
       </motion.div>
 

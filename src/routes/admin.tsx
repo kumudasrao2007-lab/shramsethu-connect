@@ -184,11 +184,11 @@ function AdminPage() {
             )}
             {workers.map((w) => {
               const isOpen = expanded.has(w.id);
-              const gigLabel = w.gigscore != null ? String(w.gigscore) : "Awaiting data";
+              const gigLabel = w.gigscore != null ? `${w.gigscore}/500` : "Awaiting data";
               const incomeLabel = w.income.count > 0
                 ? `₹${Math.round(w.income.total).toLocaleString("en-IN")} · ${w.income.count} entr${w.income.count === 1 ? "y" : "ies"}`
                 : "No records yet";
-              const loanLabel = (w.gigscore ?? 0) >= 60 && w.docs_verified >= 1 ? "Eligible" : "Insufficient data";
+              const loanLabel = (w.gigscore ?? 0) >= 150 && w.docs_verified >= 1 ? "Eligible" : "Insufficient data";
               const docsLabel = w.docs_total === 0
                 ? "No documents"
                 : `${w.docs_verified}/${w.docs_total} verified`;

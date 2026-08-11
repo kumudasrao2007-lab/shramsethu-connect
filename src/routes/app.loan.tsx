@@ -22,12 +22,12 @@ function LoanPage() {
   const score = gig.data?.score ?? 0;
 
   // Simple, transparent eligibility estimation.
-  const eligible = score >= 40 && verifiedDocs >= 2 && incomeMonths >= 2;
+  const eligible = score >= 150 && verifiedDocs >= 2 && incomeMonths >= 2;
   const monthlyAvg = incomeMonths > 0 ? totalIncome / Math.max(incomeMonths, 1) : 0;
-  const estAmount = eligible ? Math.round((monthlyAvg * (score / 60) * 6) / 500) * 500 : 0;
+  const estAmount = eligible ? Math.round((monthlyAvg * (score / 300) * 6) / 500) * 500 : 0;
 
   const checks = [
-    { ok: score >= 40, label: `GigScore ≥ 40 (current ${score})` },
+    { ok: score >= 150, label: `GigScore ≥ 150 / 500 (current ${score})` },
     { ok: verifiedDocs >= 2, label: `2+ verified documents (current ${verifiedDocs})` },
     { ok: incomeMonths >= 2, label: `Income logged for 2+ months (current ${incomeMonths})` },
   ];
@@ -70,7 +70,7 @@ function LoanPage() {
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {[
               { i: TrendingUp, t: "Income history", d: `₹${totalIncome.toLocaleString("en-IN")} across ${incomeMonths} months.` },
-              { i: Sparkles, t: "GigScore", d: `Score ${score}/100 from verified work.` },
+              { i: Sparkles, t: "GigScore", d: `Score ${score}/500 from verified work.` },
               { i: CheckCircle2, t: "Verified docs", d: `${verifiedDocs} documents approved.` },
               { i: ShieldCheck, t: "Trust status", d: eligible ? "Ready for partner bank review." : "Building verified signals." },
             ].map((f) => (
