@@ -13,6 +13,18 @@ function GigScorePage() {
   const { data } = useQuery({ queryKey: ["gigscore"], queryFn: () => getMyGigscore() });
   const score = data?.score;
   const locked = data?.reason === "profile_incomplete";
+  const pct = Math.min(100, Math.round(((score ?? 0) / 500) * 100));
+  const breakdown = (data?.breakdown ?? null) as Record<string, number> | null;
+  const parts: { key: string; label: string; max: number }[] = [
+    { key: "monthly_uploads", label: "Verified monthly uploads", max: 180 },
+    { key: "consecutive_uploads", label: "Consecutive monthly uploads", max: 70 },
+    { key: "documents", label: "Verified documents", max: 36 },
+    { key: "consistency", label: "Earnings consistency", max: 50 },
+    { key: "account_completion", label: "Account completion", max: 20 },
+    { key: "identity_verification", label: "Identity verification", max: 25 },
+    { key: "long_term_activity", label: "Long-term activity", max: 60 },
+    { key: "income_history", label: "Reliable income history", max: 30 },
+  ];
   return (
     <div className="space-y-6">
       <PageHeader
@@ -27,8 +39,17 @@ function GigScorePage() {
           <div className="flex flex-col items-center text-center">
             <div className="grid h-40 w-40 place-items-center rounded-full border-8 border-muted">
               <div className="text-center">
-                <div className="text-5xl font-bold text-gradient">{score ?? "—"}</div>
+                <div className="text-4xl font-bold text-gradient">{score ?? "—"}</div>
+                <div className="text-xs font-medium text-muted-foreground">out of 500</div>
                 <div className="mt-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground">{score ? "Verified" : "Awaiting data"}</div>
+              </div>
+            </div>
+            <div className="mt-6 w-full max-w-md">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                <div className="h-full rounded-full gradient-primary transition-all" style={{ width: `${pct}%` }} />
+              </div>
+              <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
+                <span>0</span><span>{pct}%</span><span>500</span>
               </div>
             </div>
             <h3 className="mt-6 max-w-md text-base font-semibold">
@@ -48,11 +69,36 @@ function GigScorePage() {
           </div>
         </div>
 
+        {breakdown && (
+          <div className="rounded-3xl border bg-card p-6 shadow-sm lg:col-span-1">
+            <h3 className="text-sm font-semibold">Score breakdown</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Your GigScore grows gradually — each verified month, streak and document adds a little more.
+            </p>
+            <div className="mt-4 space-y-3">
+              {parts.map((p) => {
+                const v = Number(breakdown[p.key] ?? 0);
+                return (
+                  <div key={p.key}>
+                    <div className="flex items-center justify-between text-xs">
+                      <span>{p.label}</span>
+                      <span className="text-muted-foreground">{v}/{p.max}</span>
+                    </div>
+                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                      <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, (v / p.max) * 100)}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <div className="space-y-4">
-          <ExplainCard icon={Info} title="What is GigScore?" body="A single, portable reputation score summarising your verified work identity across gigs and platforms." />
-          <ExplainCard icon={Sparkles} title="How is it calculated?" body="From verified work history, income consistency, document verification, on-time performance and skill signals." />
+          <ExplainCard icon={Info} title="What is GigScore?" body="A single, portable reputation score out of 500 summarising your verified work identity across gigs and platforms." />
+          <ExplainCard icon={Sparkles} title="How is it calculated?" body="From verified monthly income uploads, consecutive upload streaks, earnings consistency, verified documents, identity verification and long-term platform activity." />
           <ExplainCard icon={Award} title="Benefits" body="Higher GigScore improves visibility to employers, unlocks fairer loan offers and priority access to schemes." />
-          <ExplainCard icon={TrendingUp} title="Grows over time" body="The more verified activity you add, the more accurate and valuable your score becomes." />
+          <ExplainCard icon={TrendingUp} title="Grows over time" body="One upload adds only a little. Around 20-40 after your first verified month, 120-200 after six, and 400+ only for long-term consistent workers." />
         </div>
       </div>
     </div>
