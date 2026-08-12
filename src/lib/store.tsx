@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import type { Session } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
+import { DEMO_EVENT, exitDemo, isDemo } from "@/lib/demo";
 import { getMyProfile, updateMyProfile, updateMySettings } from "@/lib/demo-api";
 
 export type WorkCategory =
@@ -52,6 +53,15 @@ type Ctx = {
 };
 
 const StoreContext = createContext<Ctx | null>(null);
+
+/** Local-only stand-in session so Demo Mode can render the worker app without auth. */
+const DEMO_SESSION = {
+  access_token: "demo",
+  token_type: "bearer",
+  expires_in: 3600,
+  refresh_token: "demo",
+  user: { id: "demo-user", email: "demo@shramsethu.in", app_metadata: {}, user_metadata: {}, aud: "demo", created_at: new Date().toISOString() },
+} as unknown as Session;
 
 type RawProfile = {
   full_name: string | null;
@@ -146,13 +156,38 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    const startDemo = () => {
+      setSession(DEMO_SESSION);
+      void loadProfile().finally(() => setLoading(false));
+    };
+    if (isDemo()) {
+      startDemo();
+      const onDemo = () => {
+        if (isDemo()) startDemo();
+        else {
+          setSession(null);
+          setProfile(null);
+        }
+      };
+      window.addEventListener(DEMO_EVENT, onDemo);
+      return () => {
+        mounted = false;
+        window.removeEventListener(DEMO_EVENT, onDemo);
+      };
+    }
+    const onDemoStart = () => {
+      if (isDemo()) startDemo();
+    };
+    window.addEventListener(DEMO_EVENT, onDemoStart);
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
+      if (isDemo()) return;
       setSession(data.session);
       if (data.session) loadProfile().finally(() => setLoading(false));
       else setLoading(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
+      if (isDemo()) return;
       setSession(s);
       if (s) {
         setTimeout(() => loadProfile(), 0);
@@ -162,6 +197,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
     return () => {
       mounted = false;
+      window.removeEventListener(DEMO_EVENT, onDemoStart);
       sub.subscription.unsubscribe();
     };
   }, [loadProfile]);
@@ -195,6 +231,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         });
       },
       signOut: async () => {
+        if (isDemo()) {
+          exitDemo();
+          setSession(null);
+          setProfile(null);
+          return;
+        }
         // Clear only this user's App Lock unlock session.
         const uid = session?.user?.id;
         if (uid) {
