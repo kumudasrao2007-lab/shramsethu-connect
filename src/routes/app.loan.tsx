@@ -3,7 +3,7 @@ import { CheckCircle2, Circle, ShieldCheck, Sparkles, TrendingUp, Wallet } from 
 
 import { PageHeader } from "@/components/PageHeader";
 import { useQuery } from "@tanstack/react-query";
-import { getLoanEligibility, getMyGigscore, listMyDocuments, listMyTransactions } from "@/lib/api.functions";
+import { getLoanEligibility, getMyGigscore, listMyDocuments, listMyTransactions } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/loan")({
   component: LoanPage,

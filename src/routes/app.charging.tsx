@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { InteractiveMap, type MapMarker } from "@/components/InteractiveMap";
 import { useMutation } from "@tanstack/react-query";
-import { nearbyPlaces } from "@/lib/api.functions";
+import { nearbyPlaces } from "@/lib/demo-api";
 import { getCurrentCoords } from "@/lib/geolocation";
 import { toast } from "sonner";
 

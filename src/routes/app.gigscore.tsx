@@ -3,7 +3,7 @@ import { Award, Info, Sparkles, TrendingUp } from "lucide-react";
 
 import { PageHeader } from "@/components/PageHeader";
 import { useQuery } from "@tanstack/react-query";
-import { getMyGigscore } from "@/lib/api.functions";
+import { getMyGigscore } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/gigscore")({
   component: GigScorePage,

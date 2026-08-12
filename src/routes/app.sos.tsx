@@ -16,7 +16,7 @@ import {
   listEmergencyContacts,
   saveEmergencyContact,
   triggerSOS,
-} from "@/lib/api.functions";
+} from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/sos")({
   component: SosPage,

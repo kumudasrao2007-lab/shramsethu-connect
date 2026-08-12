@@ -23,7 +23,7 @@ import { useStore } from "@/lib/store";
 import {
   analyzeDocument, getMyDocumentUrl, listMyIncomeUploads, listMyTransactions,
   recordDocument, type DocKind,
-} from "@/lib/api.functions";
+} from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/income")({
   component: IncomePage,

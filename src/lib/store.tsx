@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import type { Session } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
-import { getMyProfile, updateMyProfile, updateMySettings } from "@/lib/api.functions";
+import { getMyProfile, updateMyProfile, updateMySettings } from "@/lib/demo-api";
 
 export type WorkCategory =
   | "Delivery Partner"
