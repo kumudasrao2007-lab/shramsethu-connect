@@ -4,12 +4,17 @@
  */
 import { createClient } from "@supabase/supabase-js";
 
-import { serverEnv } from "@/lib/env.server";
+import { serverEnvAny } from "@/lib/env.server";
 
 export async function publicSchemes() {
   const supabase = createClient(
-    serverEnv("SUPABASE_URL") ?? "",
-    serverEnv("SUPABASE_PUBLISHABLE_KEY") ?? serverEnv("SUPABASE_ANON_KEY") ?? "",
+    serverEnvAny("SUPABASE_URL", "VITE_SUPABASE_URL") ?? "",
+    serverEnvAny(
+      "SUPABASE_PUBLISHABLE_KEY",
+      "VITE_SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_ANON_KEY",
+      "VITE_SUPABASE_ANON_KEY",
+    ) ?? "",
     { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
   );
   const { data, error } = await supabase
