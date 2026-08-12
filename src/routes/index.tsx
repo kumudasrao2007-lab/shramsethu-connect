@@ -1,5 +1,6 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { enterDemo } from "@/lib/demo";
 import {
   ArrowRight,
   BadgeCheck,
@@ -120,6 +121,7 @@ function Landing() {
               <Button asChild variant="outline" size="lg" className="rounded-full">
                 <a href="#features">Learn More</a>
               </Button>
+              <DemoModeButton />
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-2">
               {audience.map((a) => (
@@ -343,5 +345,24 @@ function Landing() {
         </div>
       </footer>
     </div>
+  );
+}
+
+/** Lets judges/visitors explore the full worker app with sample data, no sign-up. */
+function DemoModeButton() {
+  const navigate = useNavigate();
+  return (
+    <Button
+      type="button"
+      variant="secondary"
+      size="lg"
+      className="rounded-full"
+      onClick={() => {
+        enterDemo();
+        navigate({ to: "/app" });
+      }}
+    >
+      <Sparkles className="mr-1.5 h-4 w-4" /> Enter Demo Mode
+    </Button>
   );
 }

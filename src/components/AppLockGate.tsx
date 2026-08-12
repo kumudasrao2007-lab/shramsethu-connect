@@ -20,6 +20,7 @@ import {
   type LockConfig,
 } from "@/lib/app-lock";
 import { requestAppLockReset } from "@/lib/app-lock.functions";
+import { useDemo } from "@/lib/demo";
 import { useStore } from "@/lib/store";
 
 /**
@@ -29,7 +30,8 @@ import { useStore } from "@/lib/store";
  */
 export function AppLockGate({ children }: { children: ReactNode }) {
   const { session, loading, profile } = useStore();
-  const userId = session?.user?.id ?? "";
+  const demo = useDemo();
+  const userId = demo ? "" : session?.user?.id ?? "";
   const [cfg, setCfg] = useState<LockConfig | null>(null);
   const [checked, setChecked] = useState(false);
   const [unlocked, setUnlocked] = useState(true);

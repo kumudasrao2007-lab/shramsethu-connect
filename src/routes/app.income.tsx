@@ -20,10 +20,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useStore } from "@/lib/store";
+import { demoNow, useDemo } from "@/lib/demo";
 import {
   analyzeDocument, getMyDocumentUrl, listMyIncomeUploads, listMyTransactions,
-  recordDocument, type DocKind,
-} from "@/lib/api.functions";
+  recordDocument, uploadDocumentFile, type DocKind,
+} from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/income")({
   component: IncomePage,
@@ -63,6 +64,7 @@ type UploadRow = Awaited<ReturnType<typeof listMyIncomeUploads>>[number];
 
 function IncomePage() {
   const qc = useQueryClient();
+  const demo = useDemo();
   const { data: txns = [] } = useQuery({ queryKey: ["txns"], queryFn: () => listMyTransactions() });
   const uploadsQ = useQuery({
     queryKey: ["income-uploads"],
@@ -74,7 +76,8 @@ function IncomePage() {
   });
   const uploads: UploadRow[] = uploadsQ.data ?? [];
 
-  const now = new Date();
+  // Demo Mode uses the demo reference date so July's sample earnings are "current".
+  const now = demo ? demoNow() : new Date();
   const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay());
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const startOfYear = new Date(now.getFullYear(), 0, 1);
@@ -89,7 +92,7 @@ function IncomePage() {
   const daily = useMemo(() => {
     const days: { date: string; amount: number }[] = [];
     for (let i = 29; i >= 0; i--) {
-      const d = new Date(); d.setDate(now.getDate() - i);
+      const d = new Date(now); d.setDate(now.getDate() - i);
       const key = d.toISOString().slice(0, 10);
       const amt = incomes.filter((t) => t.occurred_on === key).reduce((a, t) => a + Number(t.amount), 0);
       days.push({ date: key.slice(5), amount: amt });
@@ -101,7 +104,7 @@ function IncomePage() {
     // Last 12 ISO weeks
     const buckets: { label: string; amount: number }[] = [];
     for (let i = 11; i >= 0; i--) {
-      const end = new Date(); end.setDate(now.getDate() - i * 7);
+      const end = new Date(now); end.setDate(now.getDate() - i * 7);
       const start = new Date(end); start.setDate(end.getDate() - 6);
       const amt = incomes.filter((t) => {
         const d = new Date(t.occurred_on);
@@ -303,8 +306,7 @@ function UploadEarningsDialog({ onSaved }: { onSaved: () => void }) {
         if (!okType) { toast.error(`${file.name}: unsupported format`); continue; }
         if (file.size > MAX_BYTES) { toast.error(`${file.name}: exceeds 10 MB`); continue; }
         const path = `${session.user.id}/income/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name}`;
-        const up = await supabase.storage.from("documents").upload(path, file, { upsert: false });
-        if (up.error) throw up.error;
+        await uploadDocumentFile(path, file);
         const rec = await recordDocument({ data: {
           kind,
           document_name: `${source} · ${frequency} · ${MONTHS[Number(month) - 1]} ${year} · ${file.name}`,

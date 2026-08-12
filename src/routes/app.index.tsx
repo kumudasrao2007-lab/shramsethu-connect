@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { profileCompletion, useStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
-import { listMyDocuments, listMyNotifications, listMyWorkHistory, getMyGigscore } from "@/lib/api.functions";
+import { listMyDocuments, listMyNotifications, listMyWorkHistory, getMyGigscore } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/")({
   component: Dashboard,

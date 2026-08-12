@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
-import { listSchemes } from "@/lib/api.functions";
+import { listSchemes } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/schemes")({
   component: SchemesPage,

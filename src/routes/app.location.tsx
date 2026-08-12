@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { InteractiveMap } from "@/components/InteractiveMap";
 import { getCurrentCoords } from "@/lib/geolocation";
 import { useStore } from "@/lib/store";
-import { recordLocation } from "@/lib/api.functions";
+import { recordLocation } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/location")({
   component: LocationPage,
