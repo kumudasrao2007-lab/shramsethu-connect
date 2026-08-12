@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -120,6 +120,7 @@ function Landing() {
               <Button asChild variant="outline" size="lg" className="rounded-full">
                 <a href="#features">Learn More</a>
               </Button>
+              <DemoModeButton />
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-2">
               {audience.map((a) => (
