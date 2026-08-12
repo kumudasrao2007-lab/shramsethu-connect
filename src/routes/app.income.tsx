@@ -63,6 +63,7 @@ type UploadRow = Awaited<ReturnType<typeof listMyIncomeUploads>>[number];
 
 function IncomePage() {
   const qc = useQueryClient();
+  const demo = useDemo();
   const { data: txns = [] } = useQuery({ queryKey: ["txns"], queryFn: () => listMyTransactions() });
   const uploadsQ = useQuery({
     queryKey: ["income-uploads"],
