@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useStore } from "@/lib/store";
+import { demoNow, useDemo } from "@/lib/demo";
 import {
   analyzeDocument, getMyDocumentUrl, listMyIncomeUploads, listMyTransactions,
   recordDocument, uploadDocumentFile, type DocKind,
