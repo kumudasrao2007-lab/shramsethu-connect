@@ -74,7 +74,8 @@ function IncomePage() {
   });
   const uploads: UploadRow[] = uploadsQ.data ?? [];
 
-  const now = new Date();
+  // Demo Mode uses the demo reference date so July's sample earnings are "current".
+  const now = demo ? demoNow() : new Date();
   const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay());
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const startOfYear = new Date(now.getFullYear(), 0, 1);
@@ -89,7 +90,7 @@ function IncomePage() {
   const daily = useMemo(() => {
     const days: { date: string; amount: number }[] = [];
     for (let i = 29; i >= 0; i--) {
-      const d = new Date(); d.setDate(now.getDate() - i);
+      const d = new Date(now); d.setDate(now.getDate() - i);
       const key = d.toISOString().slice(0, 10);
       const amt = incomes.filter((t) => t.occurred_on === key).reduce((a, t) => a + Number(t.amount), 0);
       days.push({ date: key.slice(5), amount: amt });
@@ -101,7 +102,7 @@ function IncomePage() {
     // Last 12 ISO weeks
     const buckets: { label: string; amount: number }[] = [];
     for (let i = 11; i >= 0; i--) {
-      const end = new Date(); end.setDate(now.getDate() - i * 7);
+      const end = new Date(now); end.setDate(now.getDate() - i * 7);
       const start = new Date(end); start.setDate(end.getDate() - 6);
       const amt = incomes.filter((t) => {
         const d = new Date(t.occurred_on);
