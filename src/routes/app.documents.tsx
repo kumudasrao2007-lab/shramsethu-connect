@@ -19,7 +19,7 @@ import { useStore } from "@/lib/store";
 import { refreshVerifiedData } from "@/lib/refresh";
 import {
   analyzeDocument, deleteMyDocument, getMyDocumentUrl,
-  listMyDocuments, recordDocument, type DocKind,
+  listMyDocuments, recordDocument, uploadDocumentFile, type DocKind,
 } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/documents")({
@@ -76,8 +76,7 @@ function DocumentsPage() {
       setBusy((n) => n + 1);
       try {
         const path = `${session.user.id}/${kind}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name}`;
-        const up = await supabase.storage.from("documents").upload(path, file, { upsert: false });
-        if (up.error) throw up.error;
+        await uploadDocumentFile(path, file);
         const rec = await recordDocument({ data: {
           kind,
           document_name: docName.trim() || file.name,

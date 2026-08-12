@@ -22,7 +22,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useStore } from "@/lib/store";
 import {
   analyzeDocument, getMyDocumentUrl, listMyIncomeUploads, listMyTransactions,
-  recordDocument, type DocKind,
+  recordDocument, uploadDocumentFile, type DocKind,
 } from "@/lib/demo-api";
 
 export const Route = createFileRoute("/app/income")({
@@ -303,8 +303,7 @@ function UploadEarningsDialog({ onSaved }: { onSaved: () => void }) {
         if (!okType) { toast.error(`${file.name}: unsupported format`); continue; }
         if (file.size > MAX_BYTES) { toast.error(`${file.name}: exceeds 10 MB`); continue; }
         const path = `${session.user.id}/income/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name}`;
-        const up = await supabase.storage.from("documents").upload(path, file, { upsert: false });
-        if (up.error) throw up.error;
+        await uploadDocumentFile(path, file);
         const rec = await recordDocument({ data: {
           kind,
           document_name: `${source} · ${frequency} · ${MONTHS[Number(month) - 1]} ${year} · ${file.name}`,
