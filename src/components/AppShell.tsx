@@ -22,6 +22,7 @@ import { useState } from "react";
 
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
+import { useDemo } from "@/lib/demo";
 import { useStore } from "@/lib/store";
 
 type NavItem = {
@@ -46,6 +47,7 @@ const nav: NavItem[] = [
 
 export function AppShell() {
   const { profile, signOut } = useStore();
+  const demo = useDemo();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -148,6 +150,17 @@ export function AppShell() {
       )}
 
       <div className="lg:pl-64">
+        {demo && (
+          <div className="flex flex-wrap items-center justify-center gap-2 bg-primary/10 px-4 py-2 text-center text-xs font-medium text-primary">
+            <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+              Demo Mode
+            </span>
+            <span>Sample July 2026 data · nothing is saved to the live database</span>
+            <button onClick={handleSignOut} className="font-semibold underline underline-offset-2">
+              Exit demo
+            </button>
+          </div>
+        )}
         <header className="sticky top-0 z-20 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b bg-background/80 px-4 py-3 backdrop-blur sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <button

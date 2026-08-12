@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useStore } from "@/lib/store";
 import { adminUnlock } from "@/lib/admin.functions";
+import { enterDemo } from "@/lib/demo";
 
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup"]).optional(),
@@ -211,6 +212,23 @@ function AuthPage() {
                   </div>
                   <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:text-foreground" />
                 </button>
+              </div>
+              <div className="mt-6 rounded-2xl border border-dashed bg-muted/40 p-4">
+                <div className="text-sm font-semibold">Just exploring?</div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Enter Demo Mode to walk through every worker feature with sample data — no
+                  registration, and nothing is saved to the live database.
+                </p>
+                <Button
+                  type="button"
+                  className="mt-3 w-full rounded-xl gradient-primary text-white shadow-soft"
+                  onClick={() => {
+                    enterDemo();
+                    navigate({ to: "/app" });
+                  }}
+                >
+                  Enter Demo Mode
+                </Button>
               </div>
             </div>
           )}
