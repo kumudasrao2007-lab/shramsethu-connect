@@ -19,7 +19,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppSosRouteImport } from './routes/app.sos'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
-import { Route as AppSchemesRouteImport } from './routes/app.schemes'
 import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppLocationRouteImport } from './routes/app.location'
 import { Route as AppLoanRouteImport } from './routes/app.loan'
@@ -29,6 +28,8 @@ import { Route as AppDocumentsRouteImport } from './routes/app.documents'
 import { Route as AppChargingRouteImport } from './routes/app.charging'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as AppSchemesIndexRouteImport } from './routes/app.schemes.index'
+import { Route as AppSchemesSlugRouteImport } from './routes/app.schemes.$slug'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
@@ -82,11 +83,6 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
-const AppSchemesRoute = AppSchemesRouteImport.update({
-  id: '/schemes',
-  path: '/schemes',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -134,6 +130,16 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AppSchemesIndexRoute = AppSchemesIndexRouteImport.update({
+  id: '/schemes/',
+  path: '/schemes/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSchemesSlugRoute = AppSchemesSlugRouteImport.update({
+  id: '/schemes/$slug',
+  path: '/schemes/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -163,12 +169,13 @@ export interface FileRoutesByFullPath {
   '/app/loan': typeof AppLoanRoute
   '/app/location': typeof AppLocationRoute
   '/app/profile': typeof AppProfileRoute
-  '/app/schemes': typeof AppSchemesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/sos': typeof AppSosRoute
   '/app/': typeof AppIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/app/schemes/$slug': typeof AppSchemesSlugRoute
+  '/app/schemes/': typeof AppSchemesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -186,12 +193,13 @@ export interface FileRoutesByTo {
   '/app/loan': typeof AppLoanRoute
   '/app/location': typeof AppLocationRoute
   '/app/profile': typeof AppProfileRoute
-  '/app/schemes': typeof AppSchemesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/sos': typeof AppSosRoute
   '/app': typeof AppIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/app/schemes/$slug': typeof AppSchemesSlugRoute
+  '/app/schemes': typeof AppSchemesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -211,12 +219,13 @@ export interface FileRoutesById {
   '/app/loan': typeof AppLoanRoute
   '/app/location': typeof AppLocationRoute
   '/app/profile': typeof AppProfileRoute
-  '/app/schemes': typeof AppSchemesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/sos': typeof AppSosRoute
   '/app/': typeof AppIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/app/schemes/$slug': typeof AppSchemesSlugRoute
+  '/app/schemes/': typeof AppSchemesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -237,12 +246,13 @@ export interface FileRouteTypes {
     | '/app/loan'
     | '/app/location'
     | '/app/profile'
-    | '/app/schemes'
     | '/app/settings'
     | '/app/sos'
     | '/app/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/app/schemes/$slug'
+    | '/app/schemes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -260,12 +270,13 @@ export interface FileRouteTypes {
     | '/app/loan'
     | '/app/location'
     | '/app/profile'
-    | '/app/schemes'
     | '/app/settings'
     | '/app/sos'
     | '/app'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/app/schemes/$slug'
+    | '/app/schemes'
   id:
     | '__root__'
     | '/'
@@ -284,12 +295,13 @@ export interface FileRouteTypes {
     | '/app/loan'
     | '/app/location'
     | '/app/profile'
-    | '/app/schemes'
     | '/app/settings'
     | '/app/sos'
     | '/app/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/app/schemes/$slug'
+    | '/app/schemes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -378,13 +390,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/schemes': {
-      id: '/app/schemes'
-      path: '/schemes'
-      fullPath: '/app/schemes'
-      preLoaderRoute: typeof AppSchemesRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/profile': {
       id: '/app/profile'
       path: '/profile'
@@ -448,6 +453,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/schemes/': {
+      id: '/app/schemes/'
+      path: '/schemes'
+      fullPath: '/app/schemes/'
+      preLoaderRoute: typeof AppSchemesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/schemes/$slug': {
+      id: '/app/schemes/$slug'
+      path: '/schemes/$slug'
+      fullPath: '/app/schemes/$slug'
+      preLoaderRoute: typeof AppSchemesSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -473,10 +492,11 @@ interface AppRouteChildren {
   AppLoanRoute: typeof AppLoanRoute
   AppLocationRoute: typeof AppLocationRoute
   AppProfileRoute: typeof AppProfileRoute
-  AppSchemesRoute: typeof AppSchemesRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppSosRoute: typeof AppSosRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppSchemesSlugRoute: typeof AppSchemesSlugRoute
+  AppSchemesIndexRoute: typeof AppSchemesIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -487,10 +507,11 @@ const AppRouteChildren: AppRouteChildren = {
   AppLoanRoute: AppLoanRoute,
   AppLocationRoute: AppLocationRoute,
   AppProfileRoute: AppProfileRoute,
-  AppSchemesRoute: AppSchemesRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppSosRoute: AppSosRoute,
   AppIndexRoute: AppIndexRoute,
+  AppSchemesSlugRoute: AppSchemesSlugRoute,
+  AppSchemesIndexRoute: AppSchemesIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
