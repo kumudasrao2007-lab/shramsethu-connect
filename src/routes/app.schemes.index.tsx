@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useQuery } from "@tanstack/react-query";
 import { listSchemes } from "@/lib/demo-api";
 
-export const Route = createFileRoute("/app/schemes")({
+export const Route = createFileRoute("/app/schemes/")({
   component: SchemesPage,
 });
 
