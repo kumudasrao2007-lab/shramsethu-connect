@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Landmark, Search, SlidersHorizontal } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExternalLink, HeartPulse, Landmark, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { EmptyState } from "@/components/EmptyState";
@@ -9,15 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { listSchemes } from "@/lib/demo-api";
+import { HEALTH_SCHEMES } from "@/lib/health-schemes";
 
 export const Route = createFileRoute("/app/schemes/")({
   component: SchemesPage,
 });
 
-const TAGS = ["All", "Registration", "Pension", "Health", "Insurance"];
+const HEALTH_TAG = "Health Schemes for Gig Workers";
+const TAGS = ["All", "Registration", "Pension", HEALTH_TAG, "Insurance"];
 const HIDDEN_CATEGORIES = ["Welfare", "Credit"];
 // Schemes removed from the catalogue (matched by code or name, case-insensitive).
-const HIDDEN_SCHEMES = ["pmjay", "ayushman"];
+const HIDDEN_SCHEMES = ["pmjay", "ayushman bharat pm-jay", "pradhan mantri jan arogya"];
 
 const isHidden = (s: { name: string; category: string | null; code?: string | null }) => {
   const hay = `${s.code ?? ""} ${s.name}`.toLowerCase();
@@ -38,17 +40,34 @@ function SchemesPage() {
   const [active, setActive] = useState<Scheme | null>(null);
   const { data: SCHEMES = [] } = useQuery({ queryKey: ["schemes"], queryFn: () => listSchemes() });
 
+  const term = q.trim().toLowerCase();
+
   const filtered = useMemo(
     () =>
       SCHEMES.filter(
         (s) =>
           !isHidden(s) &&
           (tag === "All" || s.category === tag) &&
-          (s.name.toLowerCase().includes(q.toLowerCase()) ||
-            (s.summary ?? "").toLowerCase().includes(q.toLowerCase())),
+          (s.name.toLowerCase().includes(term) ||
+            (s.summary ?? "").toLowerCase().includes(term)),
       ),
-    [q, tag, SCHEMES],
+    [term, tag, SCHEMES],
   );
+
+  const healthMatches = useMemo(
+    () =>
+      (tag === "All" || tag === HEALTH_TAG)
+        ? HEALTH_SCHEMES.filter(
+            (s) =>
+              s.name.toLowerCase().includes(term) ||
+              s.summary.toLowerCase().includes(term) ||
+              s.shortName.toLowerCase().includes(term),
+          )
+        : [],
+    [term, tag],
+  );
+
+  const nothing = filtered.length === 0 && healthMatches.length === 0;
 
   return (
     <div className="space-y-6">
@@ -81,40 +100,91 @@ function SchemesPage() {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {nothing ? (
         <EmptyState title="No matching schemes." description="Try adjusting your search or filters." />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {filtered.map((s) => (
-            <div
-              key={s.id}
-              role="button"
-              tabIndex={0}
-              onClick={() => setActive(s as Scheme)}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActive(s as Scheme); } }}
-              className="cursor-pointer rounded-2xl border bg-card p-5 text-left shadow-sm transition hover:shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-soft text-primary">
-                  <Landmark className="h-4 w-4" />
+        <div className="space-y-6">
+          {healthMatches.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex items-center gap-2">
+                <HeartPulse className="h-4 w-4 text-primary" />
+                <h2 className="text-sm font-semibold tracking-tight">{HEALTH_TAG}</h2>
+                <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                  {healthMatches.length}
+                </span>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {healthMatches.map((s) => (
+                  <Link
+                    key={s.slug}
+                    to="/app/schemes/$slug"
+                    params={{ slug: s.slug }}
+                    className="block rounded-2xl border bg-card p-5 shadow-sm transition hover:shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-soft text-primary">
+                        <HeartPulse className="h-4 w-4" />
+                      </div>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                        Health
+                      </span>
+                    </div>
+                    <h3 className="mt-3 text-sm font-semibold">{s.name}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{s.summary}</p>
+                    <div className="mt-3 rounded-xl bg-muted/60 px-3 py-2 text-[11px] text-muted-foreground">
+                      <span className="font-semibold text-foreground">Authority · </span>{s.authority}
+                    </div>
+                    <span className="mt-3 inline-flex items-center text-xs font-medium text-primary">
+                      View details
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {filtered.length > 0 && (
+            <section className="space-y-3">
+              {healthMatches.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <Landmark className="h-4 w-4 text-primary" />
+                  <h2 className="text-sm font-semibold tracking-tight">Other schemes</h2>
                 </div>
-                <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">{s.category}</span>
+              )}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {filtered.map((s) => (
+                  <div
+                    key={s.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setActive(s as Scheme)}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActive(s as Scheme); } }}
+                    className="cursor-pointer rounded-2xl border bg-card p-5 text-left shadow-sm transition hover:shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-soft text-primary">
+                        <Landmark className="h-4 w-4" />
+                      </div>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">{s.category}</span>
+                    </div>
+                    <h3 className="mt-3 text-sm font-semibold">{s.name}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{s.summary}</p>
+                    <div className="mt-3 rounded-xl bg-muted/60 px-3 py-2 text-[11px] text-muted-foreground">
+                      <span className="font-semibold text-foreground">Eligibility · </span>{s.eligibility ?? "See official notification"}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-3 rounded-full text-primary"
+                      onClick={(e) => { e.stopPropagation(); setActive(s as Scheme); }}
+                    >
+                      View details
+                    </Button>
+                  </div>
+                ))}
               </div>
-              <h3 className="mt-3 text-sm font-semibold">{s.name}</h3>
-              <p className="mt-1 text-xs text-muted-foreground">{s.summary}</p>
-              <div className="mt-3 rounded-xl bg-muted/60 px-3 py-2 text-[11px] text-muted-foreground">
-                <span className="font-semibold text-foreground">Eligibility · </span>{s.eligibility ?? "See official notification"}
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="mt-3 rounded-full text-primary"
-                onClick={(e) => { e.stopPropagation(); setActive(s as Scheme); }}
-              >
-                View details
-              </Button>
-            </div>
-          ))}
+            </section>
+          )}
         </div>
       )}
 
