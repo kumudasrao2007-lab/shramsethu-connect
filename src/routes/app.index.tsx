@@ -114,7 +114,7 @@ function Dashboard() {
             { src: courierImg, alt: "Courier worker carrying a parcel at a doorway", caption: "Courier & parcels" },
             { src: groceryImg, alt: "Grocery delivery worker carrying a crate of fresh vegetables", caption: "Grocery delivery" },
             { src: autoImg, alt: "Auto-rickshaw driver seated in his auto", caption: "Auto & cab driving" },
-            { src: constructionImg, alt: "Construction daily-wage worker wearing a safety helmet at a site", caption: "Daily-wage work" },
+            { src: constructionImg, alt: "Construction worker wearing a safety helmet at a site", caption: "Construction work" },
           ].map((p) => (
             <figure key={p.caption} className="group overflow-hidden rounded-2xl border bg-background shadow-sm">
               <img

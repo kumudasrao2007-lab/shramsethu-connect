@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "ShramSethu — Turning Every Gig into a Better Future" },
-      { name: "description", content: "ShramSethu builds digital identity, GigScore reputation, and financial access for delivery partners, drivers, construction workers, freelancers, and daily wage workers." },
+      { name: "description", content: "ShramSethu builds digital identity, GigScore reputation, and financial access for delivery partners, drivers, construction workers, and freelancers." },
       { name: "author", content: "ShramSethu" },
       { property: "og:title", content: "ShramSethu — Turning Every Gig into a Better Future" },
       { property: "og:description", content: "Digital identity and financial empowerment platform for India's gig workforce." },

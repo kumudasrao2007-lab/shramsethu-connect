@@ -27,7 +27,6 @@ const CATS: WorkCategory[] = [
   "Driver",
   "Construction Worker",
   "Freelancer",
-  "Daily Wage Worker",
   "Other",
 ];
 

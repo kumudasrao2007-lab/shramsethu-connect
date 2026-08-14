@@ -33,7 +33,7 @@ export const Route = createFileRoute("/app/income")({
 const SOURCES = [
   "Rapido","Ola","Uber","Namma Yatri","Swiggy","Zomato","Porter",
   "Amazon Flex","Flipkart","Blinkit","Zepto","Dunzo",
-  "Construction Work","Daily Wage","Freelancing","Agriculture","Self Employed","Other",
+  "Construction Work","Freelancing","Agriculture","Self Employed","Other",
 ] as const;
 type IncomeSource = typeof SOURCES[number];
 type Frequency = "daily" | "weekly" | "monthly" | "yearly";
