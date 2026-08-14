@@ -63,7 +63,7 @@ export const HEALTH_SCHEMES: HealthScheme[] = [
     description:
       "PMBJP makes quality generic medicines available at affordable prices through a nationwide network of dedicated Jan Aushadhi Kendras. The medicines are procured from WHO-GMP certified suppliers and are typically priced far below equivalent branded products.",
     purpose:
-      "To reduce out-of-pocket medicine spending for low and irregular-income households, including gig and daily-wage workers, and to raise awareness that generic medicines are equally effective.",
+      "To reduce out-of-pocket medicine spending for low and irregular-income households, including gig workers, and to raise awareness that generic medicines are equally effective.",
     eligibility: [
       "Open to every citizen — anyone can buy medicines at a Jan Aushadhi Kendra",
       "No registration, income limit or card required to purchase",
@@ -201,7 +201,7 @@ export const HEALTH_SCHEMES: HealthScheme[] = [
     description:
       "Mission Indradhanush, and its Intensified Mission Indradhanush rounds, is a targeted immunisation drive to reach children and pregnant women who were missed or partially covered under routine immunisation, with special focus on urban slums, construction sites, brick kilns, nomadic and migrant families.",
     purpose:
-      "To achieve full immunisation coverage against vaccine-preventable diseases and reach exactly the mobile, informal-sector families — construction, delivery and daily-wage workers — who most often miss routine vaccination sessions.",
+      "To achieve full immunisation coverage against vaccine-preventable diseases and reach exactly the mobile, informal-sector families — construction and delivery workers — who most often miss routine vaccination sessions.",
     eligibility: [
       "Children up to 5 years of age who are unvaccinated or partially vaccinated",
       "Pregnant women who have missed their tetanus-diphtheria doses",

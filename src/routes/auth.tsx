@@ -48,7 +48,7 @@ function AuthPage() {
   const [submitting, setSubmitting] = useState(false);
   const [adminCode, setAdminCode] = useState("");
   const [adminBusy, setAdminBusy] = useState(false);
-  const { signUp, signIn, signInWithGoogle, isAuthed, profile } = useStore();
+  const { signUp, signIn, isAuthed, profile } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -113,14 +113,6 @@ function AuthPage() {
         return;
       }
       toast.success("Signed in");
-    }
-  };
-
-  const google = async () => {
-    try {
-      await signInWithGoogle(returnTo ? window.location.href : undefined);
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Google sign-in failed");
     }
   };
 
@@ -407,15 +399,6 @@ function AuthPage() {
                   {mode === "signup" ? "Create account" : "Sign in"} <ArrowRight className="ml-1.5 h-4 w-4" />
                 </>
               )}
-            </Button>
-
-            <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t" /></div>
-              <div className="relative flex justify-center text-[11px] uppercase tracking-wider"><span className="bg-background px-2 text-muted-foreground">or</span></div>
-            </div>
-            <Button type="button" variant="outline" size="lg" className="w-full rounded-xl" onClick={google}>
-              <svg viewBox="0 0 24 24" className="mr-2 h-4 w-4" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.66 4.1-5.5 4.1-3.31 0-6-2.73-6-6.1s2.69-6.1 6-6.1c1.88 0 3.14.8 3.86 1.48l2.63-2.53C16.86 3.4 14.65 2.4 12 2.4 6.79 2.4 2.6 6.6 2.6 12s4.19 9.6 9.4 9.6c5.42 0 9-3.8 9-9.14 0-.61-.06-1.08-.14-1.55H12z"/></svg>
-              Continue with Google
             </Button>
 
             <p className="text-center text-xs text-muted-foreground">

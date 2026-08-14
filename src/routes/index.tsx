@@ -8,7 +8,6 @@ import {
   Battery,
   Bike,
   Bot,
-  Building2,
   ChevronDown,
   FileCheck2,
   HardHat,
@@ -51,7 +50,6 @@ const audience = [
   { icon: Truck, label: "Drivers" },
   { icon: HardHat, label: "Construction Workers" },
   { icon: Bot, label: "Freelancers" },
-  { icon: Building2, label: "Daily Wage Workers" },
 ];
 
 function Landing() {
@@ -108,8 +106,8 @@ function Landing() {
             </h1>
             <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
               ShramSethu is a digital identity and financial empowerment platform for
-              delivery partners, drivers, construction workers, freelancers and daily wage
-              workers — building portable reputation, income visibility and access to
+              delivery partners, drivers, construction workers and freelancers —
+              building portable reputation, income visibility and access to
               formal finance.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -295,7 +293,7 @@ function Landing() {
           </div>
           <Accordion type="single" collapsible className="mt-10 rounded-2xl border bg-card">
             {[
-              { q: "Who is ShramSethu for?", a: "Delivery partners, drivers, construction workers, freelancers, daily wage workers and other gig workers who want a verified digital identity and financial visibility." },
+              { q: "Who is ShramSethu for?", a: "Delivery partners, drivers, construction workers, freelancers and other gig workers who want a verified digital identity and financial visibility." },
               { q: "Is my data secure?", a: "Yes. Your data is stored securely and shared only with your consent. Documents are encrypted at rest." },
               { q: "Do I need documents to start?", a: "You can create a profile immediately. Verification unlocks GigScore, scheme matches and loan eligibility over time." },
               { q: "Is this a bank or lender?", a: "No. ShramSethu is a digital identity platform that helps lenders, employers and ecosystems make fairer decisions using verified worker data." },
