@@ -1,24 +1,22 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  Activity,
   ArrowRight,
   BadgeCheck,
-  BarChart3,
-  Bell,
-  Briefcase,
-  Clock,
-  FileCheck2,
   Sparkles,
-  Wallet,
 } from "lucide-react";
 
-import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { profileCompletion, useStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
-import { listMyDocuments, listMyNotifications, listMyWorkHistory, getMyGigscore } from "@/lib/demo-api";
+import { listMyDocuments, getMyGigscore } from "@/lib/demo-api";
+import riderImg from "@/assets/gig-delivery-rider.jpg";
+import autoImg from "@/assets/gig-auto-driver.jpg";
+import courierImg from "@/assets/gig-courier.jpg";
+import groceryImg from "@/assets/gig-grocery.jpg";
+import constructionImg from "@/assets/gig-construction.jpg";
+import cabImg from "@/assets/gig-cab-driver.jpg";
 
 export const Route = createFileRoute("/app/")({
   component: Dashboard,
@@ -28,8 +26,6 @@ function Dashboard() {
   const { profile } = useStore();
   const pct = profileCompletion(profile);
   const docs = useQuery({ queryKey: ["docs"], queryFn: () => listMyDocuments(), enabled: !!profile });
-  const notifs = useQuery({ queryKey: ["notifs"], queryFn: () => listMyNotifications(), enabled: !!profile });
-  const work = useQuery({ queryKey: ["work"], queryFn: () => listMyWorkHistory(), enabled: !!profile });
   const gig = useQuery({ queryKey: ["gigscore"], queryFn: () => getMyGigscore(), enabled: !!profile });
   const verified = (docs.data ?? []).filter((d) => d.status === "verified").length;
   const totalDocs = Math.max(docs.data?.length ?? 0, 3);
