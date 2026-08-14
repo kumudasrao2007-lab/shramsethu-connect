@@ -1,24 +1,22 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  Activity,
   ArrowRight,
   BadgeCheck,
-  BarChart3,
-  Bell,
-  Briefcase,
-  Clock,
-  FileCheck2,
   Sparkles,
-  Wallet,
 } from "lucide-react";
 
-import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { profileCompletion, useStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
-import { listMyDocuments, listMyNotifications, listMyWorkHistory, getMyGigscore } from "@/lib/demo-api";
+import { listMyDocuments, getMyGigscore } from "@/lib/demo-api";
+import riderImg from "@/assets/gig-delivery-rider.jpg";
+import autoImg from "@/assets/gig-auto-driver.jpg";
+import courierImg from "@/assets/gig-courier.jpg";
+import groceryImg from "@/assets/gig-grocery.jpg";
+import constructionImg from "@/assets/gig-construction.jpg";
+import cabImg from "@/assets/gig-cab-driver.jpg";
 
 export const Route = createFileRoute("/app/")({
   component: Dashboard,
@@ -28,8 +26,6 @@ function Dashboard() {
   const { profile } = useStore();
   const pct = profileCompletion(profile);
   const docs = useQuery({ queryKey: ["docs"], queryFn: () => listMyDocuments(), enabled: !!profile });
-  const notifs = useQuery({ queryKey: ["notifs"], queryFn: () => listMyNotifications(), enabled: !!profile });
-  const work = useQuery({ queryKey: ["work"], queryFn: () => listMyWorkHistory(), enabled: !!profile });
   const gig = useQuery({ queryKey: ["gigscore"], queryFn: () => getMyGigscore(), enabled: !!profile });
   const verified = (docs.data ?? []).filter((d) => d.status === "verified").length;
   const totalDocs = Math.max(docs.data?.length ?? 0, 3);
@@ -85,86 +81,55 @@ function Dashboard() {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Recent activity */}
-        <div className="rounded-2xl border bg-card p-5 shadow-sm lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Recent Activity</h3>
-            <Bell className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div className="mt-4">
-            {(work.data ?? []).length === 0 ? (
-              <EmptyState icon={Activity} title="No recent activity" description="Once you start logging gigs and updates, they will appear here." />
-            ) : (
-              <ul className="space-y-2">
-                {(work.data ?? []).slice(0, 5).map((w) => (
-                  <li key={w.id} className="rounded-xl border p-3 text-sm"><div className="font-semibold">{w.title}</div><div className="text-xs text-muted-foreground">{w.employer ?? "—"} · {w.category ?? "—"}</div></li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-        {/* Notifications */}
-        <div className="rounded-2xl border bg-card p-5 shadow-sm">
-          <h3 className="text-sm font-semibold">Notifications</h3>
-          <div className="mt-4">
-            {(notifs.data ?? []).length === 0 ? (
-              <EmptyState icon={Bell} title="You're all caught up" description="Important updates about verification and schemes will appear here." />
-            ) : (
-              <ul className="space-y-2">
-                {(notifs.data ?? []).slice(0, 5).map((n) => (
-                  <li key={n.id} className="rounded-xl border p-3 text-sm"><div className="font-semibold">{n.title}</div>{n.body && <div className="text-xs text-muted-foreground">{n.body}</div>}</li>
-                ))}
-              </ul>
-            )}
+      {/* Gig worker showcase */}
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="overflow-hidden rounded-3xl border bg-card shadow-soft"
+      >
+        <div className="relative">
+          <img
+            src={cabImg}
+            alt="Cab driver standing beside his taxi on a city road at sunrise"
+            width={1600}
+            height={912}
+            loading="lazy"
+            className="h-56 w-full object-cover sm:h-72 lg:h-80"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/45 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+            <h2 className="max-w-2xl text-xl font-bold tracking-tight text-primary-foreground sm:text-3xl">
+              Empowering Every Gig Worker
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm text-primary-foreground/85 sm:text-base">
+              Build your financial identity, track your work, and unlock better opportunities with ShramSethu.
+            </p>
           </div>
         </div>
 
-        {/* Work history */}
-        <div className="rounded-2xl border bg-card p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Work History</h3>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div className="mt-4">
-            <EmptyState icon={Briefcase} title="No work records added yet." description="Log your first gig to start building work history." />
-          </div>
+        <div className="grid grid-cols-2 gap-3 p-4 sm:gap-4 sm:p-6 lg:grid-cols-5">
+          {[
+            { src: riderImg, alt: "Food delivery rider on a motorcycle with an insulated delivery bag", caption: "Food delivery" },
+            { src: courierImg, alt: "Courier worker carrying a parcel at a doorway", caption: "Courier & parcels" },
+            { src: groceryImg, alt: "Grocery delivery worker carrying a crate of fresh vegetables", caption: "Grocery delivery" },
+            { src: autoImg, alt: "Auto-rickshaw driver seated in his auto", caption: "Auto & cab driving" },
+            { src: constructionImg, alt: "Construction daily-wage worker wearing a safety helmet at a site", caption: "Daily-wage work" },
+          ].map((p) => (
+            <figure key={p.caption} className="group overflow-hidden rounded-2xl border bg-background shadow-sm">
+              <img
+                src={p.src}
+                alt={p.alt}
+                width={1280}
+                height={960}
+                loading="lazy"
+                className="h-32 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-40"
+              />
+              <figcaption className="px-3 py-2 text-xs font-medium text-muted-foreground">{p.caption}</figcaption>
+            </figure>
+          ))}
         </div>
-
-        {/* Income */}
-        <div className="rounded-2xl border bg-card p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Income Records</h3>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div className="mt-4">
-            <EmptyState icon={Wallet} title="No income data available." action={<Button asChild size="sm" variant="outline" className="rounded-full"><Link to="/app/income">Connect sources</Link></Button>} />
-          </div>
-        </div>
-
-        {/* Upcoming */}
-        <div className="rounded-2xl border bg-card p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Upcoming Features</h3>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <ul className="mt-4 space-y-3">
-            {[
-              { icon: Wallet, t: "Real-time loan eligibility" },
-              { icon: FileCheck2, t: "Aadhaar / PAN e-verification" },
-              { icon: BarChart3, t: "Bank-account income sync" },
-            ].map((u) => (
-              <li key={u.t} className="flex items-center gap-3 rounded-xl border p-3">
-                <div className="grid h-8 w-8 place-items-center rounded-lg gradient-soft text-primary">
-                  <u.icon className="h-4 w-4" />
-                </div>
-                <span className="text-sm font-medium">{u.t}</span>
-                <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">Coming soon</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      </motion.section>
     </div>
   );
 }
