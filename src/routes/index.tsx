@@ -8,7 +8,6 @@ import {
   Battery,
   Bike,
   Bot,
-  Building2,
   ChevronDown,
   FileCheck2,
   HardHat,

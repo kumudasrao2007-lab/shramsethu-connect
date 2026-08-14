@@ -116,14 +116,6 @@ function AuthPage() {
     }
   };
 
-  const google = async () => {
-    try {
-      await signInWithGoogle(returnTo ? window.location.href : undefined);
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Google sign-in failed");
-    }
-  };
-
   const submitAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!adminCode.trim()) {
