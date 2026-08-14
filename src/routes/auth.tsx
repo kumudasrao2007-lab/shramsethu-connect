@@ -48,7 +48,7 @@ function AuthPage() {
   const [submitting, setSubmitting] = useState(false);
   const [adminCode, setAdminCode] = useState("");
   const [adminBusy, setAdminBusy] = useState(false);
-  const { signUp, signIn, signInWithGoogle, isAuthed, profile } = useStore();
+  const { signUp, signIn, isAuthed, profile } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => {
